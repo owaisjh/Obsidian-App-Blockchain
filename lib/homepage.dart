@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         SizedBox(height: 15.0),
                         Text(
-                          obsidianBalance.toString(),
+                          '${obsidianBalance.toString()} Obsidian',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 40.0,
