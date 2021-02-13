@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
+import 'function.dart';
+import 'package:toast/toast.dart';
 //import 'checker.dart';
 //import 'loading.dart';
 
@@ -10,10 +12,10 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   String email = '';
-  String username = '';
+  String name = '';
   String password = '';
   String confirmPassword = '';
-  String age;
+  String aadharNumber;
   String contactNo;
   
   @override
@@ -61,13 +63,13 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                               TextFormField(
                                 decoration: InputDecoration(
-                                    labelText: "Enter username", 
+                                    labelText: "Enter your name", 
                                     fillColor: Colors.white,
                                     prefixIcon: Icon(Icons.person_outline)
                                     ),
                                 keyboardType: TextInputType.text,                                
                                 onChanged: (value){
-                                  username = value.trimRight();
+                                  name = value.trimRight();
                                   //print(username);
                                 },
                                 
@@ -99,16 +101,20 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                               TextFormField(
                                 decoration: InputDecoration(
-                                    labelText: "Enter age", 
+                                    labelText: "Enter Aadhar Number", 
                                     fillColor: Colors.white,
-                                    hintText: "Age",
+                                    hintText: "Aadhar Number",
                                     prefixIcon: Icon(Icons.person_pin)
                                     ),
 
                                 keyboardType: TextInputType.number,
                                 onChanged: (value){
-                                  age = value.trimRight();
+                                  aadharNumber = value.trimRight();
                                   //print(age);
+                                  
+                                },
+                                 validator: (value){
+                                  return (value.length != 12) ? 'Enter a valid aadhar number' : null; 
                                 },
                                 
                               ),
@@ -117,7 +123,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     labelText: "Enter contact number", 
                                     fillColor: Colors.white,
                                     hintText: 'Contact Number',
-                                    prefixIcon: Icon(Icons.phone, color: Colors.white),
+                                    prefixIcon: Icon(Icons.phone, color: Colors.grey),
                                     
                                     ),
 
@@ -149,43 +155,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                 textColor: Colors.white,
                                 child:  Text('Create User'),
                                 onPressed: () async {
-                                  // if (username == '' || password == '' || confirmPassword ==''){
-                                  //   Fluttertoast.showToast(
-                                  //     msg: "These fields cannot be empty",
-                                  //     toastLength: Toast.LENGTH_LONG,
-                                  //     gravity: ToastGravity.CENTER,
-                                  //     textColor: Colors.black,
-                                  //     backgroundColor: Colors.grey,
-                                  //     fontSize: 16.0                                
-                                  //  );
-                                  // }
+                                  if (name == '' || password == '' || confirmPassword ==''){
                                   
-                                //   else if( password!='' && confirmPassword!='' && password == confirmPassword ) {
-                                //     Navigator.push(context, MaterialPageRoute(builder: (context) => Loading(),),);
-                                //     var response = await createUser(email: email, username: username, password: password, age: age, contactNo: contactNo);
-                                //     print(response.body);
-                                //     if (response.statusCode == 201) {
-                                //       Fluttertoast.showToast(
-                                //       msg: "User Created Successfully",
-                                //       toastLength: Toast.LENGTH_LONG,
-                                //       gravity: ToastGravity.CENTER,
-                                //       textColor: Colors.black,
-                                //       backgroundColor: Colors.grey,
-                                //       fontSize: 16.0                                
-                                //    );
-                                //     Navigator.pop(context);
-                                //     }
-                                //     if (response.statusCode == 400){
-                                //      Fluttertoast.showToast(
-                                //       msg: "User with the same username exists",
-                                //       toastLength: Toast.LENGTH_LONG,
-                                //       gravity: ToastGravity.CENTER,
-                                //       textColor: Colors.black,
-                                //       backgroundColor: Colors.grey,
-                                //       fontSize: 16.0                                
-                                //    ); 
-                                //   }
-                                // }
+                                  showToast("These fields cannot be empty");
+                                  }
+                                  
+                                  else if( password!='' && confirmPassword!='' && password == confirmPassword ) {
+                                    //Navigator.push(context, MaterialPageRoute(builder: (context) => Loading(),),);
+                                    var response = await createUser(email: email, name: name, password: password, aadharNumber: aadharNumber, contactNo: contactNo);
+                                    print(response.body);
+                                    if (response.statusCode == 201) {
+                                      showToast("User Created successfully", duration: Toast.LENGTH_LONG);
+                                    Navigator.pop(context);
+                                    }
+                                  //   if (response.statusCode == 400){
+                                      
+                                  // }
+                                }
                                 //   else {
                                 //     Fluttertoast.showToast(
                                 //       msg: "Passwords do not match",
@@ -224,5 +210,9 @@ class _RegisterPageState extends State<RegisterPage> {
         
       ),
     );
+    
+  }
+  void showToast(String msg, {int duration, int gravity}) {
+    Toast.show(msg, context, duration: duration, gravity: gravity);
   }
 }

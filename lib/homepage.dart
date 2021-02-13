@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:obsidian/completed_trans.dart';
 import 'package:obsidian/dashboard.dart';
-
-// void main() => runApp(MyApp());
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       title: 'Money Management',
-//       theme: ThemeData(primarySwatch: Colors.purple),
-//       home: HomePage(),
-//     );
-//   }
-// }
+import 'package:obsidian/models/transaction.dart';
+import 'package:obsidian/transactionpage.dart';
+import 'completed_trans.dart';
+import 'previous_trans.dart';
+import 'package:obsidian/models/user.dart';
+import 'function.dart';
 
 class HomePage extends StatefulWidget {
+  final User user;
+
+  HomePage({this.user});
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -23,11 +19,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    final user = widget.user;
+    
     Color primaryColor = Colors.black;
+
     //Color primaryColor = Color.fromRGBO(255, 82, 48, 1);
 
-    List transaction = ['Transaction 1', 'Transaction 2', 'Transaction 3'];
+    //List transaction = ['Transaction 1', 'Transaction 2', 'Transaction 3'];
 
+    
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(244, 244, 244, 1),
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            '2800,00',
+                            'Dhairya',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 30.0,
@@ -140,6 +140,8 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   Material(
                                     borderRadius: BorderRadius.circular(100.0),
@@ -149,13 +151,17 @@ class _HomePageState extends State<HomePage> {
                                       icon: Icon(Icons.send),
                                       color: Colors.purple,
                                       iconSize: 30.0,
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => CompletedTransaction(),),);
+                                      },
                                     ),
                                   ),
                                   SizedBox(height: 8.0),
-                                  Text('Send',
+                                  Text('Completed \n Transactions',
+                                  textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: Colors.black54,
+                                          
                                           fontWeight: FontWeight.bold))
                                 ],
                               ),
@@ -169,11 +175,14 @@ class _HomePageState extends State<HomePage> {
                                       icon: Icon(Icons.credit_card),
                                       color: Colors.blue,
                                       iconSize: 30.0,
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => PreviousTransaction(),),);
+                                      },
                                     ),
                                   ),
                                   SizedBox(height: 8.0),
-                                  Text('Pay',
+                                  Text('Previous \nTransactions',
+                                  textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: Colors.black54,
                                           fontWeight: FontWeight.bold))
@@ -237,7 +246,9 @@ class _HomePageState extends State<HomePage> {
                                       icon: Icon(Icons.favorite),
                                       color: Colors.purpleAccent,
                                       iconSize: 30.0,
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionPage(user: user),),);
+                                      },
                                     ),
                                   ),
                                   SizedBox(height: 8.0),
@@ -307,7 +318,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.0),
+              padding: EdgeInsets.fromLTRB(25, 30, 0, 0),
               child: Text(
                 'Ongoing Transactions',
                 style: TextStyle(
@@ -316,71 +327,44 @@ class _HomePageState extends State<HomePage> {
                     fontSize: 20.0),
               ),
             ),
-
-            
-             ListView.builder( 
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: transaction.length, 
-              itemBuilder: (BuildContext context,int index){ 
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: UpcomingCard(
-                    index: index,
-                    title: transaction[index],
-                    value: 100,
-                  ),
+            FutureBuilder(
+              future: getOngoingContracts(user.email),
+              builder: (BuildContext context, AsyncSnapshot snapshot){
+                print('future1');
+                //print(snapshot.data);
+                if(snapshot.data == null){
+                return Center(
+                    child: 
+                    Text('Ruko jara, sabar karo')
                 );
-              //   return Padding(
-              //     padding: EdgeInsets.all(8.0),
-              //     child: ListTile( 
-                    
-              //     leading: Icon(Icons.list), 
-              //     trailing: Icon(Icons.arrow_right), 
-                               
-              // title:Text(transaction[index]) 
-              // ),
-              //   ); 
+                }
+              else {
+                //return Center(child: Text(snapshot.data[1]['emplyeeEmail']));
+                return ListView.builder( 
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: snapshot.data.length, 
+                  
+                  itemBuilder: (BuildContext context,int index){ 
+                    return Padding(
+                      padding:  EdgeInsets.all(8.0),
+                      child: UpcomingCard(
+                        index: index,
+                        title: "By : ${snapshot.data[index]['employerEmail']}",
+
+                        value: "Contract ID : ${snapshot.data[index]['id']}",
+                        // onTap: () {
+                        //   Navigator.push(context, MaterialPageRoute(builder: (context) => PendingPage(pendingcontract: pending,),),);
+                        // },
+                      ),
+                    );
         }
+        );
+              }})
+            ]),
         ),
-             
-        
-            
-            // Padding(
-            //   padding: EdgeInsets.only(left: 10.0, bottom: 10.0),
-            //   child: Container(
-            //       height: 150.0,
-            //       child: ListView(
-            //         scrollDirection: Axis.vertical,
-            //         children: <Widget>[
-            //           UpcomingCard(
-            //             title: 'Cred Card One',
-            //             value: 280.0,
-            //             color: Colors.purple,
-            //           ),
-            //           UpcomingCard(
-            //             title: 'Cred Card Text Two',
-            //             value: 260.0,
-            //             color: Colors.blue,
-            //           ),
-            //           UpcomingCard(
-            //             title: 'Cred Card Text Two',
-            //             value: 210.0,
-            //             color: Colors.orange,
-            //           ),
-            //           UpcomingCard(
-            //             title: 'Cred Card Text Two',
-            //             value: 110.0,
-            //             color: Colors.pink,
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            // )
-          ],
-        ),
-      ),
-    );
+      );
+
   }
 }
 
@@ -402,49 +386,53 @@ class CustomShapeClipper extends CustomClipper<Path> {
 
 class UpcomingCard extends StatelessWidget {
   final String title;
-  final double value;
+  final String value;
   final int index;
+  final Function onTap;
   // final Color color;
 
-  UpcomingCard({this.title, this.value, this.index});
+  UpcomingCard({this.title, this.value, this.index,this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final color = index%2 == 0 ? Colors.blue : Colors.orange;
     return Padding(
-      padding: EdgeInsets.only(right: 15.0),
-      child: Container(
-        margin: EdgeInsets.all(5),
-        width: 120.0,
-        decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.all(Radius.circular(25.0))),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(title,
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 30.0),
-                  Text('$value',
-                      style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold))
-                ],
-              ),
-              IconButton(
-                icon: Icon(Icons.arrow_right, color: Colors.white,),
-                color: Colors.white, 
-                onPressed: null)
-            ],
+      padding: EdgeInsets.only(right: 10.0),
+      child: GestureDetector(
+        child: Container(
+          margin: EdgeInsets.all(5),
+          width: 120.0,
+          decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.all(Radius.circular(25.0))),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(title,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 30.0),
+                    Text('$value',
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold))
+                  ],
+                ),
+                IconButton(
+                  icon: Icon(Icons.arrow_right, color: Colors.white,),
+                  color: Colors.white, 
+                  onPressed: null)
+              ],
+            ),
           ),
         ),
+        onTap: onTap,
       ),
     );
   }

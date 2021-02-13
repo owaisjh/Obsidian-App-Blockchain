@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:obsidian/homepage.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
 import 'package:obsidian/register.dart';
+import 'function.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,16 +10,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String username;
+  String email;
   String password;
 
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -49,14 +46,14 @@ class _LoginPageState extends State<LoginPage> {
                         children: <Widget>[
                            TextFormField(
                             decoration: InputDecoration(
-                                labelText: "Enter Email", 
+                                labelText: "Enter email", 
                                 fillColor: Colors.white,
-                                prefixIcon: Icon(Icons.person_outline)
+                                prefixIcon: Icon(Icons.email)
                                 ),
 
                             keyboardType: TextInputType.emailAddress,
                             onChanged: (value){
-                              username = value;
+                              email = value;
                             },
                             
                           ),
@@ -87,17 +84,19 @@ class _LoginPageState extends State<LoginPage> {
                             textColor: Colors.white,
                             child:  Text('Login'),
                             onPressed: () async {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(),),);
+                              //Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(),),);
                               // Navigator.push(context, MaterialPageRoute(builder: (context) => Loading(),),);
 
 
-                              // var response = await getUsername(username, password);
-                              // //print(response.body);
-                              // if ( response.statusCode == 200 ) 
-                              // {
-                              //   Navigator.push(context, MaterialPageRoute(builder: (context) => Loggedin(),),);
-                              //   //print('hi');
-                              // }
+                              var response = await login(email, password);
+                              //print(response.body);
+                              if ( response.statusCode == 200 ) 
+                              {
+                                print("Login SuccessFUL----------");
+                                var user = await getProfile(email);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: user),),);
+                                //print('hi');
+                              }
                               // else  {
                               //   Navigator.pop(context);
                               //   Fluttertoast.showToast(
