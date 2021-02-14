@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 import "models/user.dart";
 
 const url = "https://664cdbe3ce46.ngrok.io/";
@@ -53,6 +54,17 @@ class _NewContractState extends State<NewContract> {
     });
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
+
+    Fluttertoast.showToast(
+        msg: "Offer Sent",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -317,7 +329,7 @@ class _NewContractState extends State<NewContract> {
                             child: RaisedButton(
                               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                               onPressed: () {
-                                print('Received click');
+                                Navigator.of(context).pop();
                               },
                               child: Text(
                                 'Discard',

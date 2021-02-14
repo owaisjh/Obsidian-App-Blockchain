@@ -78,6 +78,17 @@ class _HomePageState extends State<HomePage> {
 
         _btnController.success();
 
+        Fluttertoast.showToast(
+            msg: "Payment Successful",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+
+        Navigator.of(context).pop();
+
         // print('Response status: ${response.statusCode}');
         // print('Response body: ${response.body}');
       } else {

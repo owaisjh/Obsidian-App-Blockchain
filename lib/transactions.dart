@@ -31,7 +31,7 @@ class TransactionListState extends State<TransactionList> {
     });
     print('Response status: ${response2.statusCode}');
     // print('Response body: ${response2.body}');
-    var new_arr = jsonDecode(response2.body)[1];
+    var new_arr = jsonDecode(response2.body)[1].reversed.toList();
     // print(new_arr);
     for (int a = 0; a < new_arr.length; a++) {
       var isdebited = true;
@@ -161,17 +161,17 @@ class TransactionListState extends State<TransactionList> {
                                 ),
                               ),
                             ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "5th Feb",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
+                            // Container(
+                            //   alignment: Alignment.centerLeft,
+                            //   child: Text(
+                            //     "5th Feb",
+                            //     style: TextStyle(
+                            //       color: Colors.grey,
+                            //       fontSize: 17,
+                            //       fontWeight: FontWeight.w400,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
