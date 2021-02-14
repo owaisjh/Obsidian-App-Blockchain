@@ -436,7 +436,7 @@ class _HomePageState extends State<HomePage> {
                                           builder: (context) =>
                                               TransactionPage(user: user),
                                         ),
-                                      );
+                                      ).then((value) => updateVal());
                                     },
                                   ),
                                 ),
